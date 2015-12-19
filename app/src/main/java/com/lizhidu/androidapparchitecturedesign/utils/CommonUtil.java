@@ -2,6 +2,7 @@ package com.lizhidu.androidapparchitecturedesign.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 /**
  * 工具类
  */
-public class JudgeUtil {
+public class CommonUtil {
     public final static String TAG = "";
     public static SimpleDateFormat sdfL = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat sdfS = new SimpleDateFormat("yyyy-MM-dd");
@@ -67,6 +68,44 @@ public class JudgeUtil {
         return null == str || "".equals(str)
                 || "NULL".equals(str.toUpperCase());
     }
+
+    /**
+     * 判断网络是否可用
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity == null) {
+            return false;
+        } else {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 开启activity
+     */
+    public static void launchActivity(Context context, Class<?> activity) {
+        Intent intent = new Intent(context, activity);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        context.startActivity(intent);
+    }
+
+    public static void launchActivityForResult(Activity context,
+                                               Class<?> activity, int requestCode) {
+        Intent intent = new Intent(context, activity);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        context.startActivityForResult(intent, requestCode);
+    }
+
 
     /**
      * 判断String是否是由字母和数字组成
@@ -140,7 +179,7 @@ public class JudgeUtil {
     }
 
     public static String getShortTime(String time) {
-        if (!JudgeUtil.isBlank(time)) {
+        if (!CommonUtil.isBlank(time)) {
             if ((time.substring(0, 10)).trim().equalsIgnoreCase(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).trim())) {
                 return "今天 " + time.substring(11, 16);
             } else {
@@ -153,7 +192,7 @@ public class JudgeUtil {
     }
 
     public static String getShortTime2(String time) {
-        if (!JudgeUtil.isBlank(time)) {
+        if (!CommonUtil.isBlank(time)) {
             if ((time.substring(0, 10)).trim().equalsIgnoreCase(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).trim())) {
                 return "最新 " + time.substring(11, 16);
             } else {
